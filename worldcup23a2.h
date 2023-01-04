@@ -16,12 +16,20 @@
 #define WORLDCUP23A2_H_
 
 #include "wet2util.h"
+#include "Team.h"
+#include "HashTable.h"
+#include "Tree.h"
+#include <memory>
+#include <unordered_map>
 
 class world_cup_t {
 private:
 	//
 	// Here you may add anything you want
 	//
+    Tree<int, Team> teamsByID;
+    Tree<int, Team> teamsByAbility;
+    std::unordered_map<int, std::shared_ptr<PlayerNode>> hashTable;
 	
 public:
 	// <DO-NOT-MODIFY> {

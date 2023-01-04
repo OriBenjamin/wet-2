@@ -4,21 +4,66 @@
 
 #ifndef WET_2_PLAYER_H
 #define WET_2_PLAYER_H
+
+class Team;
+
 #include "wet2util.h"
+#include "Team.h"
 #include <memory>
 
 class Player{
 
-private:
-    int playerID, gamesPlayedDistance, ability, cards, goalKeeper;
-    std::weak_ptr<Team> team;
-    permutation_t partialSpirit;
-
 public:
     Player(int playerId, int gamesPlayedDistance, int ability, int cards, int goalKeeper,
-           const permutation_t &partialSpirit) : playerID(playerId), gamesPlayedDistance(gamesPlayedDistance),
+           const permutation_t &spirit) : playerID(playerId), gamesPlayedDistance(gamesPlayedDistance),
                                                  ability(ability), cards(cards), goalKeeper(goalKeeper),
-                                                 team(nullptr), partialSpirit(permutation_t()) {}
+                                                 team(nullptr), teamSpirit(spirit), partialSpirit(spirit) {}
+    Player(const Player&) = default;
 
+    const permutation_t &getPartialSpirit() const {
+        return partialSpirit;
+    }
+
+    const permutation_t &getTeamSpirit() const {
+        return teamSpirit;
+    }
+
+    void setGamesPlayedDistance(int gamesPlayedDistance) {
+        this->gamesPlayedDistance = gamesPlayedDistance;
+    }
+
+    int getGamesPlayedDistance() const {
+        return this->gamesPlayedDistance;
+    }
+
+    int getPlayerID() const {
+        return this->playerID;
+    }
+
+    // setters
+
+    void setTeam(Team* team) {
+        this->team = team;
+    }
+
+    void setTeamSpirit(const permutation_t &teamSpirit) {
+        this->teamSpirit = teamSpirit;
+    }
+
+    void setPartialSpirit(const permutation_t &partialSpirit) {
+        this->partialSpirit = partialSpirit;
+    }
+
+private:
+    int playerID, gamesPlayedDistance, ability, cards, goalKeeper;
+    Team* team;
+    permutation_t teamSpirit;
+    permutation_t partialSpirit;
 };
+
+//bool operator==(const Player& player1, const Player& player2)
+//{
+//    return player1.getPlayerID() == player2.getPlayerID();
+//}
+
 #endif //WET_2_PLAYER_H
