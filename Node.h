@@ -13,7 +13,7 @@ class Tree;
 const int INITIAL_HEIGHT = 0;
 
 template<class Key, class Value>
-class Node
+struct Node
 {
 public:
     Node<Key,Value>* right, *left, *parent, *next, *prev;
@@ -29,9 +29,7 @@ public:
     Node& operator=(const Node& n) = default;
     bool operator<(const Node<Key,Value>& node) const;
 
-    //const getters
     Key getKey() const;
-
 };
 
 

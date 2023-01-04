@@ -14,7 +14,7 @@ const int INITIAL_HASH_TABLE_SIZE = 10;
 const int INITIAL_KEY = 0;
 
 
-class NodeAlreadyExist :  public std::exception
+class NodeAlreadyExistInHash :  public std::exception
 {
     public:
     const char* what() const noexcept override {return "Node already exist in this Hash Table";}
@@ -79,7 +79,7 @@ class HashTable
 
 
 
-    void insert(int key, const Value& value)
+    void insert(int key, Value& value)
     {
         if(key<0)
         {
@@ -109,7 +109,7 @@ class HashTable
         {
             if(search(key) != nullptr)
             {
-                throw NodeAlreadyExist();
+                throw NodeAlreadyExistInHash();
             }
 
             std::unique_ptr<HashTableNode> oldFirstNode = std::move(elements[index]);
@@ -192,7 +192,7 @@ class HashTable
             }
             std::unique_ptr<HashTableNode>* currentNodeInChain = &(elements[i]);
             int j = 0;
-            std::cout << "index in array: " << i << "value: " << *((*currentNodeInChain)->value)  <<  " index in chain: " << j<< std::endl;
+            std::cout << "index in array: " << i << " value: " << *((*currentNodeInChain)->value)  <<  " index in chain: " << j<< std::endl;
             j++;
             while((*currentNodeInChain)->next != nullptr)
             {

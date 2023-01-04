@@ -19,23 +19,23 @@
 #include "Team.h"
 #include "HashTable.h"
 #include "Tree.h"
+#include "PlayerNode.h"
+#include "Pair.h"
 #include <memory>
-#include <unordered_map>
 
 class world_cup_t {
 private:
-	//
-	// Here you may add anything you want
-	//
+
     Tree<int, Team> teamsByID;
-    Tree<int, Team> teamsByAbility;
-    std::unordered_map<int, std::shared_ptr<PlayerNode>> hashTable;
+    Tree<Pair<int,int>, Team> teamsByAbility;
+    HashTable<PlayerNode> hashTable;
 	
 public:
+    void print();
 	// <DO-NOT-MODIFY> {
 	
-	world_cup_t();
-	virtual ~world_cup_t();
+	world_cup_t() = default;
+	virtual ~world_cup_t() = default;
 	
 	StatusType add_team(int teamId);
 	

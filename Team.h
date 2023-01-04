@@ -4,20 +4,23 @@
 
 #ifndef WET_2_TEAM_H
 #define WET_2_TEAM_H
+
 class PlayerNode;
 class Player;
+
 #include "wet2util.h"
 #include <memory>
 #include "Player.h"
 
-class Team {
+class Team
+{
 
-private:
+    private:
     int teamID, points, playersAbilitySum;
     bool hasGoalKeeper;
     std::shared_ptr<PlayerNode> teamRoot;
 
-public:
+    public:
     Team() = delete;
     Team(int teamID):
     teamID(teamID), points(0), playersAbilitySum(0),
@@ -25,26 +28,61 @@ public:
     Team(const Team&) = delete;
     ~Team() = default;
 
-    int &getTeamIDByRef() {
+    //const getters
+    const std::shared_ptr<PlayerNode>& getTeamRoot() const
+    {
+        return teamRoot;
+    }
+    int getTeamId() const
+    {
+        return teamID;
+    }
+    int getTeamPoints() const
+    {
+        return points;
+    }
+    int getPlayersAbilitySum() const
+    {
+        return playersAbilitySum;
+    }
+    bool getHasGoalKeeper() const
+    {
+        return hasGoalKeeper;
+    }
+
+    //getters
+    int& getTeamIDByRef()
+    {
         return teamID;
     };
-    int &getTeamAbilityByRef() {
+    int& getTeamAbilityByRef()
+    {
         return playersAbilitySum;
     };
-    const std::shared_ptr<PlayerNode> &getTeamRoot() const {
+    std::shared_ptr<PlayerNode>& getTeamRoot()
+    {
         return teamRoot;
     }
 
-    void setTeamRoot(const std::shared_ptr<PlayerNode> &teamRoot) {
-        //edit fields
-        this->teamRoot = teamRoot;
+    int& getTeamPoints()
+    {
+        return points;
     }
+
+    bool& getHasGoalKeeper()
+    {
+        return hasGoalKeeper;
+    }
+
+
+
 };
 
-std::shared_ptr<PlayerNode> makeSet(std::unique_ptr<Player> player);
+PlayerNode* makeSet(std::unique_ptr<Player> player);
 std::shared_ptr<PlayerNode> unionTeamNodes(std::shared_ptr<PlayerNode> teamNode1, std::shared_ptr<PlayerNode> teamNode2);
 std::shared_ptr<PlayerNode> findTeamNode(std::shared_ptr<PlayerNode> playerNode);
 int getGamesPlayed(std::shared_ptr<PlayerNode> playerNode);
 permutation_t getPartialSpirit(std::shared_ptr<PlayerNode> playerNode);
+void updateTeam(Team* team, int extraAbility, bool extraGoalKeeper);
 
 #endif //WET_2_TEAM_H
