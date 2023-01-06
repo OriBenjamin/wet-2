@@ -79,7 +79,7 @@ class HashTable
 
 
 
-    void insert(int key, Value& value)
+    void insert(int key, Value* value)
     {
         if(key<0)
         {
@@ -98,12 +98,11 @@ class HashTable
 
         if(elements[index] == nullptr)
         {
-            std::shared_ptr<Value> newValue = std::make_shared<Value>(value);
+            std::shared_ptr<Value> newValue = std::shared_ptr<Value>(value);
             HashTableNode* newNode = new HashTableNode(newValue, nullptr, key);
-            std::unique_ptr<HashTableNode> node = std::make_unique<HashTableNode>(*newNode);
+            std::unique_ptr<HashTableNode> node = std::unique_ptr<HashTableNode>(newNode);
             elements[index] = std::move(node);
             currentAmountOfNodes++;
-            delete newNode;
         }
         else
         {
@@ -113,7 +112,7 @@ class HashTable
             }
 
             std::unique_ptr<HashTableNode> oldFirstNode = std::move(elements[index]);
-            std::unique_ptr<HashTableNode> newNode = std::make_unique<HashTableNode>(std::make_shared<Value>(value), std::move(oldFirstNode), key);
+            std::unique_ptr<HashTableNode> newNode = std::unique_ptr<HashTableNode>(new HashTableNode(std::shared_ptr<Value>(value), std::move(oldFirstNode), key));
             elements[index] = std::move(newNode);
             currentAmountOfNodes++;
         }
@@ -171,11 +170,11 @@ class HashTable
         {
             if(oldElements[i] != nullptr)
             {
-                insert(oldElements[i]->key, *(oldElements[i]->value));
+                insert(oldElements[i]->key, (oldElements[i]->value).get());
                 std::unique_ptr<HashTableNode>* currentNodeInChain = &(oldElements[i]->next);
                 while((*currentNodeInChain) != nullptr)
                 {
-                    insert((*(*currentNodeInChain)).key, *((*(*currentNodeInChain)).value));
+                    insert((*(*currentNodeInChain)).key, (*(*currentNodeInChain)).value.get());
                     currentNodeInChain = &((*currentNodeInChain)->next);
                 }
             }

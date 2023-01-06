@@ -69,7 +69,7 @@ std::shared_ptr<PlayerNode> findTeamNode(std::shared_ptr<PlayerNode> playerNode)
         playerNode->getPlayer()->setPartialSpirit((teamNode->getPlayer()->getPlayerPartialSpirit()).inv()*partialSpirit);
         playerNode->getPlayer()->setGamesPlayedDistance(gamesPlayed - teamNode->getPlayer()->getPlayerGamesPlayedDistance());
         partialSpirit = partialSpirit * oldPartialSpirit.inv();
-        gamesPlayed = gamesPlayed -= oldGamesPlayed;
+        gamesPlayed = gamesPlayed - oldGamesPlayed;
         playerNode = playerNode->getParent();
     }
     return teamNode;

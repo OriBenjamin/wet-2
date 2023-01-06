@@ -67,8 +67,8 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         Team* team = teamsByID.find(&teamId);
         //remove team
         Player* player = new Player(playerId, gamesPlayed, ability, cards, goalKeeper, team, spirit);
-        PlayerNode* playerNode = makeSet(std::move(std::make_unique<Player>(*player)));
-        hashTable.insert(playerId, *playerNode);
+        PlayerNode* playerNode = makeSet(std::move(std::unique_ptr<Player>(player)));
+        hashTable.insert(playerId, playerNode);
         if(team->getTeamRoot() == nullptr)
         {
             team->getTeamRoot() = hashTable.search(playerId);
@@ -83,8 +83,8 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         updateTeam(team, hashTable.search(playerId)->getPlayer()->getPlayerAbility(), hashTable.search(playerId)->getPlayer()->getPlayerGoalKeeper());
         Pair<int,int>* newAbilityKey = new Pair<int,int>(team->getTeamAbilityByRef(), team->getTeamIDByRef());
         teamsByAbility.insert(newAbilityKey, team);
-        delete player;
-        delete playerNode;
+        //delete player;
+        //delete playerNode;
         return StatusType::SUCCESS;
     }
     catch(NodeDoesNotExist& e) //there is not such team
