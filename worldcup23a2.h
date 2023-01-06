@@ -36,7 +36,7 @@ public:
 	
 	world_cup_t();
 	virtual ~world_cup_t();
-	
+
 	StatusType add_team(int teamId);
 	
 	StatusType remove_team(int teamId);

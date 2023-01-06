@@ -42,6 +42,7 @@ int main()
     cup2022->print();
     cup2022->remove_team(25);
     cup2022->remove_team(24);
+    delete cup2022;
 /*    cup2022->print();*/
    return 0;
 }
