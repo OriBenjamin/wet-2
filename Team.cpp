@@ -10,10 +10,11 @@ PlayerNode* makeSet(std::unique_ptr<Player> player)
     return new PlayerNode(std::move(player));
 }
 
-//team1 joins team2
+//team1 joins team2!=nullptr
 std::shared_ptr<PlayerNode> unionTeamNodes(std::shared_ptr<PlayerNode> teamNode1, std::shared_ptr<PlayerNode> teamNode2)
 {
     //update ptr to team and team spirit's fields
+    if(teamNode1 == nullptr) return teamNode2;
     if(teamNode1->getTreeSize() > teamNode2->getTreeSize())
     {
         teamNode2->setParent(teamNode1);

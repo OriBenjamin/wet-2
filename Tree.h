@@ -65,6 +65,7 @@ public:
     Node<Key, Value> *getRotated(Node<Key, Value> *currentNode, int rightChildBalanceFactor,
                                  int leftChildBalanceFactor, int balanceFactor);
 
+    Value* removeWithKey(Key* key);
     Value* remove(Key* key);
     Node<Key,Value>* removeNode(Node<Key,Value>* currentNode, Key* key);
     void balanceTree(Node<Key, Value>* currentNode);
@@ -332,6 +333,26 @@ void Tree<Key, Value>::balanceTree(Node<Key, Value>* currentNode)
 
         balanceTree(currentNode->parent);
     }
+}
+
+template<class Key, class Value>
+Value* Tree<Key,Value>::removeWithKey(Key* key)
+{
+    Node<Key,Value>* removedNode = removeNode(root, key);
+    if(!removedNode->parent)
+    {
+        if(removedNode->right) root = removedNode->right;
+        else if(removedNode->left) root = removedNode->left;
+        else root = nullptr;
+    }
+    else if(!removedNode->parent->parent) root = removedNode->parent;
+    balanceTree(removedNode->parent);
+    Value* val = removedNode->value;
+    delete removedNode->key;
+    delete removedNode;
+    removedNode = nullptr;
+    this->size--;
+    return val;
 }
 
 template<class Key, class Value>

@@ -75,10 +75,6 @@ class Player
     {
         return this->gamesPlayedDistance;
     }
-    Team*& getPlayerTeam()
-    {
-        return team;
-    }
     int& getPlayerCards()
     {
         return cards;
@@ -97,12 +93,12 @@ class Player
 
     void setPartialSpirit(const permutation_t &partialSpirit)
     {
-        Player::partialSpirit = partialSpirit;
+        this->partialSpirit = partialSpirit;
     }
 
     void setPlayerTeam(Team* team)
     {
-        Player::team = team;
+        this->team = team;
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Player &player) {
