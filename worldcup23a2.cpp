@@ -4,6 +4,16 @@ void world_cup_t::print()
 {
     hashTable.print();
 }
+
+world_cup_t::world_cup_t(): teamsByID(), teamsByAbility(), hashTable()
+{
+
+}
+
+world_cup_t::~world_cup_t()
+{
+    this->teamsByAbility.deleteTreeWithKeys();
+}
 StatusType world_cup_t::add_team(int teamId)
 {
     try

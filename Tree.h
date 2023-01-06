@@ -45,7 +45,8 @@ public:
     //destructors
     ~Tree();
     void deleteTree(bool deleteValues);
-    void deleteTreeNodes(Node<Key,Value>* node, bool deleteValues);
+    void deleteTreeNodes(Node<Key,Value>* node, bool deleteValues, bool deleteKeys);
+    void deleteTreeWithKeys();
 
     //operators
     Tree& operator=(const Tree& t) = default;
@@ -88,22 +89,29 @@ Tree<Key,Value>::~Tree()
 template<class Key, class Value>
 void Tree<Key,Value>::deleteTree(bool deleteValues)
 {
-    deleteTreeNodes(root, deleteValues);
+    deleteTreeNodes(root, deleteValues, false);
     root = nullptr;
 }
 
 template<class Key, class Value>
-void Tree<Key,Value>::deleteTreeNodes(Node<Key,Value>* node, bool deleteValues)
+void Tree<Key,Value>::deleteTreeWithKeys()
+{
+    deleteTreeNodes(root, true, true);
+    root = nullptr;
+}
+
+template<class Key, class Value>
+void Tree<Key,Value>::deleteTreeNodes(Node<Key,Value>* node, bool deleteValues, bool deleteKeys)
 {
     if(!node) return;
     if(node->right)
     {
-        deleteTreeNodes(node->right, deleteValues);
+        deleteTreeNodes(node->right, deleteValues,deleteKeys);
         node->right = nullptr;
     }
     if(node->left)
     {
-        deleteTreeNodes(node->left, deleteValues);
+        deleteTreeNodes(node->left, deleteValues,deleteKeys);
         node->left = nullptr;
     }
 
@@ -111,6 +119,12 @@ void Tree<Key,Value>::deleteTreeNodes(Node<Key,Value>* node, bool deleteValues)
     {
         delete node->value;
         node->value = nullptr;
+    }
+
+    if(deleteKeys)
+    {
+        delete node->key;
+        node->key = nullptr;
     }
     delete node;
     node = nullptr;

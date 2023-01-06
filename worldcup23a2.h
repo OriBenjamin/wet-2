@@ -34,8 +34,8 @@ public:
     void print();
 	// <DO-NOT-MODIFY> {
 	
-	world_cup_t() = default;
-	virtual ~world_cup_t() = default;
+	world_cup_t();
+	virtual ~world_cup_t();
 	
 	StatusType add_team(int teamId);
 	
