@@ -363,6 +363,7 @@ Value* Tree<Key,Value>::removeWithKey(Key* key)
     balanceTree(removedNode->parent);
     Value* val = removedNode->value;
     delete removedNode->key;
+    delete removedNode->value;
     delete removedNode;
     removedNode = nullptr;
     this->size--;
