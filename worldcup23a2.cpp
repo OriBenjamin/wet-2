@@ -12,8 +12,8 @@ world_cup_t::world_cup_t(): teamsByID(), teamsByAbility(), hashTable()
 
 world_cup_t::~world_cup_t()
 {
-    this->teamsByAbility.deleteTreeWithKeys();
     this->teamsByID.deleteTree(false);
+    this->teamsByAbility.deleteTreeKeys();
 }
 
 StatusType world_cup_t::add_team(int teamId)
