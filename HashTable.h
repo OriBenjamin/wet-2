@@ -187,26 +187,6 @@ class HashTable
         }
         delete[] oldElements;
     }
-    void print()
-    {
-        for(int i = 0; i < hashTableSize; i++)
-        {
-            if(elements[i] == nullptr)
-            {
-                continue;
-            }
-            std::unique_ptr<HashTableNode>* currentNodeInChain = &(elements[i]);
-            int j = 0;
-            std::cout << "index in array: " << i << " value: " << *((*currentNodeInChain)->value)  <<  " index in chain: " << j<< std::endl;
-            j++;
-            while((*currentNodeInChain)->next != nullptr)
-            {
-                currentNodeInChain = &((*currentNodeInChain)->next);
-                std::cout << "index in array: " << i << "value: " << *((*currentNodeInChain)->value)  <<  " index in chain: " << j<< std::endl;
-                j++;
-            }
-        }
-    }
 };
 
 

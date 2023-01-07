@@ -1,9 +1,5 @@
 #include "worldcup23a2.h"
 
-void world_cup_t::print()
-{
-    hashTable.print();
-}
 
 world_cup_t::world_cup_t(): teamsByID(), teamsByAbility(), hashTable()
 {

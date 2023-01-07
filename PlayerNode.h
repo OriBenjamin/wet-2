@@ -69,25 +69,8 @@ public:
         PlayerNode::treeSize = treeSize;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const PlayerNode &node) {
-        os << "player: " << *node.player << " treeSize: " << node.treeSize;
-        return os;
-    }
-
 
 };
 
-////operators
-
-//bool operator==(const PlayerNode& node1, const PlayerNode& node2)
-//{
-//    return *node1.getPlayer() == *node2.getPlayer();
-//}
-
-//template<class Value>
-//bool operator!=(const ReverseNode<Value>& node1, const ReverseNode<Value>& node2)
-//{
-//    return !(node1 == node2);
-//}
 
 #endif //WET_2_PLAYERNODE_H

@@ -10,7 +10,6 @@ class Team;
 #include "wet2util.h"
 #include "Team.h"
 #include <memory>
-#include <ostream>
 
 class Player
 {
@@ -101,16 +100,7 @@ class Player
         this->team = team;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const Player &player) {
-        os << "playerID: " << player.playerID << " cards: " << player.cards;
-        return os;
-    }
 
 };
-
-//bool operator==(const Player& player1, const Player& player2)
-//{
-//    return player1.getPlayerID() == player2.getPlayerID();
-//}
 
 #endif //WET_2_PLAYER_H
