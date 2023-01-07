@@ -18,13 +18,13 @@ world_cup_t::~world_cup_t()
 
 StatusType world_cup_t::add_team(int teamId)
 {
+    if(teamId <=0)
+    {
+        return StatusType::INVALID_INPUT;
+    }
+    Team* team = new Team(teamId);
     try
     {
-        if(teamId <=0)
-        {
-            return StatusType::INVALID_INPUT;
-        }
-        Team* team = new Team(teamId);
         teamsByID.insert(&team->getTeamIDByRef(), team);
         Pair<int,int>* abilityKey = new Pair<int,int>(team->getTeamAbilityByRef(), team->getTeamIDByRef());
         teamsByAbility.insert(abilityKey, team);
@@ -32,10 +32,12 @@ StatusType world_cup_t::add_team(int teamId)
     }
 	catch(std::bad_alloc&)
     {
+        delete team;
         return StatusType::ALLOCATION_ERROR;
     }
     catch(NodeAlreadyExist& e)
     {
+        delete team;
         return StatusType::FAILURE;
     }
 }
@@ -71,15 +73,15 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
                                    const permutation_t &spirit, int gamesPlayed,
                                    int ability, int cards, bool goalKeeper)
 {
-    try
-    {
         if(playerId <= 0 || teamId <=0 || !(spirit.isvalid()) || gamesPlayed < 0 || cards < 0)
         {
             return StatusType::INVALID_INPUT;
         }
+    Player* player;
+    try
+    {
         Team* team = teamsByID.find(&teamId);
-        //remove team
-        Player* player = new Player(playerId, gamesPlayed, ability, cards, goalKeeper, team, spirit);
+        player = new Player(playerId, gamesPlayed, ability, cards, goalKeeper, team, spirit);
         std::shared_ptr<PlayerNode> playerNode = makeSet(std::move(std::unique_ptr<Player>(player)));
         hashTable.insert(playerId, playerNode);
         if(team->getTeamRoot() == nullptr)
@@ -106,10 +108,12 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     }
     catch(NodeAlreadyExistInHash& e) //player already exist
     {
+        delete player;
         return StatusType::FAILURE;
     }
     catch(std::bad_alloc& e) //cant increase hashTable size
     {
+        delete player;
         return StatusType::FAILURE;
     }
 }
