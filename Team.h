@@ -78,7 +78,7 @@ class Team
 
 };
 
-PlayerNode* makeSet(std::unique_ptr<Player> player);
+std::shared_ptr<PlayerNode> makeSet(std::unique_ptr<Player> player);
 std::shared_ptr<PlayerNode> unionTeamNodes(std::shared_ptr<PlayerNode> teamNode1, std::shared_ptr<PlayerNode> teamNode2);
 std::shared_ptr<PlayerNode> findTeamNode(std::shared_ptr<PlayerNode> playerNode);
 int getGamesPlayed(std::shared_ptr<PlayerNode> playerNode);

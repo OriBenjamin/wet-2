@@ -79,7 +79,7 @@ class HashTable
 
 
 
-    void insert(int key, Value* value)
+    void insert(int key, std::shared_ptr<Value> value)
     {
         if(key<0)
         {
@@ -158,6 +158,7 @@ class HashTable
             return;
         }
         std::unique_ptr<HashTableNode>* newElements = new std::unique_ptr<HashTableNode>[hashTableSize*2];
+        int oldHashTableSize = hashTableSize;
         for(int i=0; i<hashTableSize*2; i++)
         {
             newElements[i] = nullptr;
@@ -170,14 +171,19 @@ class HashTable
         {
             if(oldElements[i] != nullptr)
             {
-                insert(oldElements[i]->key, (oldElements[i]->value).get());
+                insert(oldElements[i]->key, (oldElements[i]->value));
                 std::unique_ptr<HashTableNode>* currentNodeInChain = &(oldElements[i]->next);
                 while((*currentNodeInChain) != nullptr)
                 {
-                    insert((*(*currentNodeInChain)).key, (*(*currentNodeInChain)).value.get());
+                    insert((*(*currentNodeInChain)).key, (*(*currentNodeInChain)).value);
                     currentNodeInChain = &((*currentNodeInChain)->next);
                 }
             }
+        }
+
+        for(int i=0; i<oldHashTableSize; i++)
+        {
+            oldElements[i].reset();
         }
         delete[] oldElements;
     }

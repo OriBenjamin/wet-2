@@ -80,7 +80,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         Team* team = teamsByID.find(&teamId);
         //remove team
         Player* player = new Player(playerId, gamesPlayed, ability, cards, goalKeeper, team, spirit);
-        PlayerNode* playerNode = makeSet(std::move(std::unique_ptr<Player>(player)));
+        std::shared_ptr<PlayerNode> playerNode = makeSet(std::move(std::unique_ptr<Player>(player)));
         hashTable.insert(playerId, playerNode);
         if(team->getTeamRoot() == nullptr)
         {
@@ -181,7 +181,7 @@ output_t<int> world_cup_t::num_played_games_for_player(int playerId)
     {
         return output_t<int>(StatusType::FAILURE);
     }
-    return output_t<int>(playerNode->getPlayer()->getPlayerGamesPlayedDistance());
+    return output_t<int>(getGamesPlayed(playerNode));
 }
 
 StatusType world_cup_t::add_player_cards(int playerId, int cards)
@@ -238,7 +238,8 @@ output_t<int> world_cup_t::get_ith_pointless_ability(int i)
         {
             return output_t<int>(StatusType::FAILURE);
         }
-        Node<Pair<int,int>, Team>* node = teamsByAbility.findNodeByIndex(teamsByAbility.getRoot(), 0, i);
+        // i+1 because starts with index 0
+        Node<Pair<int,int>, Team>* node = teamsByAbility.findNodeByIndex(teamsByAbility.getRoot(), 0, i+1);
         return output_t<int>(node->getKey().getSecond());
     }
     catch(NodeDoesNotExist&) //there is no a team in that index. in fact, we cant reach this situation according to the check of i in the beginning of the function
@@ -251,7 +252,7 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 {
     if(playerId <= 0)
     {
-        return output_t<permutation_t>(StatusType::FAILURE);
+        return output_t<permutation_t>(StatusType::INVALID_INPUT);
     }
     std::shared_ptr<PlayerNode> playerNode = hashTable.search(playerId);
     if(playerNode == nullptr || findTeamNode(playerNode)->getPlayer()->getPlayerTeam() == nullptr)
@@ -267,7 +268,7 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
     {
         if(teamId1 <=0 || teamId2 <= 0 || teamId1 == teamId2)
         {
-            return StatusType::FAILURE;
+            return StatusType::INVALID_INPUT;
         }
         Team* team1 = teamsByID.find(&teamId1);
         Team* team2 = teamsByID.find(&teamId2);
@@ -276,25 +277,25 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
         if(teamNode1 != nullptr)
         {
             team1->getTeamRoot() = unionTeamNodes(teamNode2,teamNode1);
+            team1->getTeamRoot()->getPlayer()->setPlayerTeam(team1);
         } else
         {
             team1->getTeamRoot() = teamNode2;
-            team1->getTeamRoot()->getPlayer()->setPlayerTeam(team1);
+            if(teamNode2!=nullptr)
+            {
+                team1->getTeamRoot()->getPlayer()->setPlayerTeam(team1);
+            }
         }
-       /* teamNode2->setParent(teamNode1);
-        teamNode1->setTreeSize(teamNode2->getTreeSize()+teamNode1->getTreeSize());
-        teamNode2->setTreeSize(1);
-        teamNode1->getPlayer()->setGamesPlayedDistance(teamNode1->getPlayer()->getPlayerGamesPlayedDistance() - teamNode2->getPlayer()->getPlayerGamesPlayedDistance());
-        teamNode1->getPlayer()->setPartialSpirit(teamNode2->getPlayer()->getTeamSpirit() * teamNode1->getPlayer()->getPlayerPartialSpirit());
-        teamNode2->getPlayer()->setPartialSpirit(teamNode1->getPlayer()->getPlayerPartialSpirit().inv() * teamNode2->getPlayer()->getPlayerPartialSpirit());
-        teamNode1->getPlayer()->setTeamSpirit(teamNode2->getPlayer()->getTeamSpirit() * teamNode1->getPlayer()->getTeamSpirit());*/
+        team2->getTeamRoot() = nullptr;
+        // update ability
         Pair<int,int>* teamToRemove = new Pair<int,int>(team1->getTeamAbilityByRef(), team1->getTeamIDByRef());
         teamsByAbility.removeWithKey(teamToRemove);
         delete teamToRemove;
-        updateTeam(team1, team2->getPlayersAbilitySum()+team1->getPlayersAbilitySum(), team2->getHasGoalKeeper()||team1->getHasGoalKeeper());
+        updateTeam(team1, team2->getPlayersAbilitySum(), team2->getHasGoalKeeper());
         Pair<int,int>* newAbilityKey = new Pair<int,int>(team1->getTeamAbilityByRef(), team1->getTeamIDByRef());
         teamsByAbility.insert(newAbilityKey, team1);
         team1->getTeamPoints() += team2->getTeamPoints();
+        // remove team2
         remove_team(team2->getTeamId());
         return StatusType::SUCCESS;
     }

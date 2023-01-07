@@ -5,9 +5,9 @@
 #include "Team.h"
 #include "PlayerNode.h"
 
-PlayerNode* makeSet(std::unique_ptr<Player> player)
+std::shared_ptr<PlayerNode> makeSet(std::unique_ptr<Player> player)
 {
-    return new PlayerNode(std::move(player));
+    return std::shared_ptr<PlayerNode>(new PlayerNode(std::move(player)));
 }
 
 //team1 joins team2!=nullptr
@@ -20,7 +20,7 @@ std::shared_ptr<PlayerNode> unionTeamNodes(std::shared_ptr<PlayerNode> teamNode1
         teamNode2->setParent(teamNode1);
         teamNode1->setTreeSize(teamNode2->getTreeSize()+teamNode1->getTreeSize());
         teamNode2->setTreeSize(1);
-        teamNode1->getPlayer()->setGamesPlayedDistance(teamNode1->getPlayer()->getPlayerGamesPlayedDistance() - teamNode2->getPlayer()->getPlayerGamesPlayedDistance());
+        teamNode2->getPlayer()->setGamesPlayedDistance(teamNode2->getPlayer()->getPlayerGamesPlayedDistance() - teamNode1->getPlayer()->getPlayerGamesPlayedDistance());
         // ps1 = ts2 * ps1
         teamNode1->getPlayer()->setPartialSpirit(teamNode2->getPlayer()->getTeamSpirit() * teamNode1->getPlayer()->getPlayerPartialSpirit());
         // ps2 = (ps1)^-1 * ps2
