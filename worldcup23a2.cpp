@@ -22,7 +22,7 @@ StatusType world_cup_t::add_team(int teamId)
     {
         return StatusType::INVALID_INPUT;
     }
-    Team* team;
+    Team* team = nullptr;
     try
     {
         if(teamsByID.exists(&teamId)) return StatusType::FAILURE;
@@ -79,12 +79,13 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     {
         return StatusType::INVALID_INPUT;
     }
-    Player* player;
+    Player* player = nullptr;
+    std::shared_ptr<PlayerNode> playerNode;
     try
     {
         Team* team = teamsByID.find(&teamId);
         player = new Player(playerId, gamesPlayed, ability, cards, goalKeeper, team, spirit);
-        std::shared_ptr<PlayerNode> playerNode = makeSet(std::move(std::unique_ptr<Player>(player)));
+        playerNode = makeSet(std::move(std::unique_ptr<Player>(player)));
         hashTable.insert(playerId, playerNode);
         if(team->getTeamRoot() == nullptr)
         {
@@ -110,7 +111,6 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     }
     catch(NodeAlreadyExistInHash& e) //player already exist
     {
-        delete player;
         return StatusType::FAILURE;
     }
     catch(std::bad_alloc& e) //cant increase hashTable size
