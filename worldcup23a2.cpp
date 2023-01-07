@@ -55,7 +55,8 @@ StatusType world_cup_t::remove_team(int teamId)
         }
         teamsByID.remove(&teamId);
         Pair<int,int>* abilityKey = new Pair<int,int>(team->getTeamAbilityByRef(), team->getTeamIDByRef());
-        teamsByAbility.removeWithKey(abilityKey);
+        Team* removedTeam = teamsByAbility.removeWithKey(abilityKey);
+        delete removedTeam;
         delete abilityKey;
         return StatusType::SUCCESS;
     }
@@ -90,7 +91,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
            unionTeamNodes(hashTable.search(playerId),team->getTeamRoot()); //always first root (team) is merged to second root (team)
         }
         Pair<int,int>* teamToRemove = new Pair<int,int>(team->getTeamAbilityByRef(), team->getTeamIDByRef());
-        teamsByAbility.remove(teamToRemove);
+        teamsByAbility.removeWithKey(teamToRemove);
         delete teamToRemove;
         updateTeam(team, hashTable.search(playerId)->getPlayer()->getPlayerAbility(), hashTable.search(playerId)->getPlayer()->getPlayerGoalKeeper());
         Pair<int,int>* newAbilityKey = new Pair<int,int>(team->getTeamAbilityByRef(), team->getTeamIDByRef());
@@ -288,7 +289,7 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
         teamNode2->getPlayer()->setPartialSpirit(teamNode1->getPlayer()->getPlayerPartialSpirit().inv() * teamNode2->getPlayer()->getPlayerPartialSpirit());
         teamNode1->getPlayer()->setTeamSpirit(teamNode2->getPlayer()->getTeamSpirit() * teamNode1->getPlayer()->getTeamSpirit());*/
         Pair<int,int>* teamToRemove = new Pair<int,int>(team1->getTeamAbilityByRef(), team1->getTeamIDByRef());
-        teamsByAbility.remove(teamToRemove);
+        teamsByAbility.removeWithKey(teamToRemove);
         delete teamToRemove;
         updateTeam(team1, team2->getPlayersAbilitySum()+team1->getPlayersAbilitySum(), team2->getHasGoalKeeper()||team1->getHasGoalKeeper());
         Pair<int,int>* newAbilityKey = new Pair<int,int>(team1->getTeamAbilityByRef(), team1->getTeamIDByRef());
