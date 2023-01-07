@@ -22,15 +22,17 @@ StatusType world_cup_t::add_team(int teamId)
     {
         return StatusType::INVALID_INPUT;
     }
-    Team* team = new Team(teamId);
+    Team* team;
     try
     {
+        if(teamsByID.exists(&teamId)) return StatusType::FAILURE;
+        team = new Team(teamId);
         teamsByID.insert(&team->getTeamIDByRef(), team);
         Pair<int,int>* abilityKey = new Pair<int,int>(team->getTeamAbilityByRef(), team->getTeamIDByRef());
         teamsByAbility.insert(abilityKey, team);
         return StatusType::SUCCESS;
     }
-	catch(std::bad_alloc&)
+    catch(std::bad_alloc&)
     {
         delete team;
         return StatusType::ALLOCATION_ERROR;
@@ -73,10 +75,10 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
                                    const permutation_t &spirit, int gamesPlayed,
                                    int ability, int cards, bool goalKeeper)
 {
-        if(playerId <= 0 || teamId <=0 || !(spirit.isvalid()) || gamesPlayed < 0 || cards < 0)
-        {
-            return StatusType::INVALID_INPUT;
-        }
+    if(playerId <= 0 || teamId <=0 || !(spirit.isvalid()) || gamesPlayed < 0 || cards < 0)
+    {
+        return StatusType::INVALID_INPUT;
+    }
     Player* player;
     try
     {
@@ -90,7 +92,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         }
         else
         {
-           unionTeamNodes(hashTable.search(playerId),team->getTeamRoot()); //always first root (team) is merged to second root (team)
+            unionTeamNodes(hashTable.search(playerId),team->getTeamRoot()); //always first root (team) is merged to second root (team)
         }
         Pair<int,int>* teamToRemove = new Pair<int,int>(team->getTeamAbilityByRef(), team->getTeamIDByRef());
         teamsByAbility.removeWithKey(teamToRemove);
@@ -190,7 +192,7 @@ output_t<int> world_cup_t::num_played_games_for_player(int playerId)
 
 StatusType world_cup_t::add_player_cards(int playerId, int cards)
 {
-	if(playerId <= 0 || cards < 0)
+    if(playerId <= 0 || cards < 0)
     {
         return StatusType::INVALID_INPUT;
     }
@@ -214,7 +216,7 @@ output_t<int> world_cup_t::get_player_cards(int playerId)
     {
         return StatusType::FAILURE;
     }
-	return output_t<int>(playerNode->getPlayer()->getPlayerCards());
+    return output_t<int>(playerNode->getPlayer()->getPlayerCards());
 }
 
 output_t<int> world_cup_t::get_team_points(int teamId)
@@ -268,7 +270,7 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 
 StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 {
-	try
+    try
     {
         if(teamId1 <=0 || teamId2 <= 0 || teamId1 == teamId2)
         {

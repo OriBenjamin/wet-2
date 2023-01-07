@@ -103,6 +103,7 @@ int main()
 		else
 		{
 			cout << "Unknown command: " << op << endl;
+            delete obj;
 			return -1;
 		}
 

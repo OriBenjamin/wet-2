@@ -80,7 +80,7 @@ bool operator==(const Pair<T,S>& p1, const Pair<T,S>& p2)
 {
     try
     {
-        if(!(p1 < p2) && !(p2 < p1))
+        if(p1.getSecond() == p2.getSecond())
         {
             return true;
         }
