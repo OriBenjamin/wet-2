@@ -12,7 +12,7 @@ world_cup_t::world_cup_t(): teamsByID(), teamsByAbility(), hashTable()
 
 world_cup_t::~world_cup_t()
 {
-    this->teamsByID.deleteTree(false);
+    this->teamsByID.deleteTree(true);
     this->teamsByAbility.deleteTreeKeys();
 }
 
